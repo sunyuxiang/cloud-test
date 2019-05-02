@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: private-registry
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: private-registry
+        version: v1
+    spec:
+      containers:
+        - name: registry
+          image: registry:2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: "/var/lib/registry"
+              name: local-disk
+      volumes:
+        - name: local-disk
+          persistentVolumeClaim:
+            claimName: local-pvc
